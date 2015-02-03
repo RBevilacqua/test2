@@ -58,6 +58,7 @@ var UserController = {
 
   index: function (req, res, netx) {
 
+
     User.find(function userList(err,users){
         if (err) return next(err);
         res.view({
@@ -92,15 +93,36 @@ var UserController = {
       });
   },
 
+  update: function (req, res, next) {
+
+
+      User.update(req.param('id'), req.params.all(), function userUpdated (err){
+        if (err) {
+            return res.redirect('/user/edit/' + req.param('id'));
+        }
+        res.redirect('/user/show/' + req.param('id'));
+
+          /*if(!_.isEmpty(result)){
+              return res.json({
+                  status: 'success',
+                  data: result
+              });
+          } else {
+              return res.json({
+                  status: 'User Not Found'
+              });
+          }*/
+      });
+  },
+
 
 
   /**
    * `UserController.delete()`
    */
   delete: function (req, res) {
-    var param = req.param('name');
 
-    User.destroy({name:param},function deleteUser(err,result){
+      User.destroy(req.param('id'),function deleteUser(err,result){
         if(err) throw erro;
 
         if(!_.isEmpty(result)){
@@ -114,7 +136,20 @@ var UserController = {
           });
         }
     });
+      res.redirect('/user');
   },
+
+  /*delete: function (req, res, next) {}
+    User.findOne(req.param('id'), function userFound(err, user){
+        if (err) return next(err);
+        if (!user) return next('User doesn\'t exist.');
+
+        User.destroy(req.param('id'), function userDestroyed(err) {
+            if(err) return next(err);
+        });
+        res.redirect('/user');
+    });
+  },*/
 
   create: function(req, res){
     var params = req.params.all();
@@ -129,12 +164,13 @@ var UserController = {
 
 
         //res.json(user);
-        res.redirect('/user/show/'+user.id);
+
 
         res.ok({
             notice: 'Create user with name ' + created.username,
             data: created
         });
+        res.redirect('/user/show/'+created.id);
     });
       //res.redirect('back');
   }

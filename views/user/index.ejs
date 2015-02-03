@@ -17,7 +17,12 @@
             <td><%= user.userPassword %></td>
             <td><a href="/user/show/<%= user.id %>" class="btn btn-sm btn-primary">Mostrar</a></td>
             <td><a href="/user/edit/<%= user.id %>" class="btn btn-sm btn-warning">Editar</a></td>
-            <td><a href="/user/destroy/<%= user.id %>" class="btn btn-sm btn-danger">Borrar</a></td>
+            <td><form action="" method="post">
+                    <input type="hidden" name="_method" value="delete"/>
+                    <input type="submit" class="btn btn-sm btn-danger" value="Delete"/>
+                    <input value="<%= _csrf %>" name="_csrf" type="hidden" class="form-control"/>
+            </form></td>
+            <td><a href="/user/delete/<%= user.id %>" class="btn btn-sm btn-danger">Borrar</a></td>
         </tr>
         <% }) %>
     </table>
