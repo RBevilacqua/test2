@@ -18,7 +18,12 @@ module.exports = {
 
     create: function(req, res, next) {
         if (!req.param('userEmail') || !req.param('userPassword')){
-            var usernamePasswordRequiredError =
+            var usernamePasswordRequiredError = [{name: 'usernamePasswordRequired', message: 'You must enter both a username and password'}];
+            req.session.flash = {
+                err: usernamePasswordRequiredError
+            }
+            res.redirect('/session/new');
+            return
         }
     }
 };
