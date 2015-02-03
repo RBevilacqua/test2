@@ -1,0 +1,14 @@
+{
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {},
+  "name": "test2",
+  "version": "0.0.0",
+  "author": "pc-lccot-altavista",
+  "private": true
+}
