@@ -23,8 +23,40 @@ module.exports = {
                 err: usernamePasswordRequiredError
             }
             res.redirect('/session/new');
-            return
+            return;
         }
+
+        User.findOneByEmail(req.param('userEmail')).done(function(err, user){
+            if (err) return next(err);
+
+            if (!user) {
+                var noAccountError = [{name: 'noAccount', message: 'The Email Addres ' + req.param('userEmail') + ' not found.'}]
+                req.session.flash = {
+                    err: noAccountError
+                }
+                res.redirect('/session/new');
+                return;
+            }
+            // Compara password con el password encriptado del usuario encontrado.
+            bcrypt.compare(req.param('userPassword'), user.userPassword, function(err, valid){
+                if (err) return next(err);
+                if (!valid) {
+                    var usernamePasswordMismatchError = [{name: 'usernamePasswordMismatch', message: 'Invalid Username and Pasword Combination.'}];
+                    req.session.flash = {
+                        err: usernamePasswordMismatchError
+                    }
+                    res.redirect('/session/new');
+                    return;
+                }
+
+                // Log user
+                req.session.authenticated = true;
+                req.session.User = user;
+
+                // Redirige a su pagina de perfil
+                res.redirect('/user/show' + user.id);
+            });
+        });
     }
 };
 
