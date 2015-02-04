@@ -123,7 +123,7 @@ var UserController = {
   delete: function (req, res) {
 
       User.destroy(req.param('id'),function deleteUser(err,result){
-        if(err) throw erro;
+        if(err) throw err;
 
         if(!_.isEmpty(result)){
           return res.json({

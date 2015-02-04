@@ -26,7 +26,7 @@ module.exports = {
             return;
         }
 
-        User.findOneByEmail(req.param('userEmail')).done(function(err, user){
+        User.findOneByUserEmail(req.param('userEmail'), function foundUser (err, user){
             if (err) return next(err);
 
             if (!user) {
@@ -37,6 +37,7 @@ module.exports = {
                 res.redirect('/session/new');
                 return;
             }
+            var bcrypt = require('bcrypt');
             // Compara password con el password encriptado del usuario encontrado.
             bcrypt.compare(req.param('userPassword'), user.userPassword, function(err, valid){
                 if (err) return next(err);
@@ -54,9 +55,14 @@ module.exports = {
                 req.session.User = user;
 
                 // Redirige a su pagina de perfil
-                res.redirect('/user/show' + user.id);
+                res.redirect('/user/show/' + user.id);
             });
         });
+    },
+
+    destroy: function(req, res, next){
+        req.session.destroy();
+        res.redirect('/session/new');
     }
 };
 
